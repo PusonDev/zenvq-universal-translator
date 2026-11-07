@@ -1,0 +1,21 @@
+{
+  "name": "zenvq-universal-translator-worker",
+  "version": "2.0.0",
+  "description": "Zero-server-load universal live translation edge API and CDN loader for the ZenVQ Ecosystem",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "keywords": [
+    "zenvq",
+    "translation",
+    "cloudflare-worker",
+    "edge-api"
+  ],
+  "author": "PusonDev",
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "^3.80.0"
+  }
+}

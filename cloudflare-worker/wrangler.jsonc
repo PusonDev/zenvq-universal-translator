@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "zenvq-universal-translator-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "vars": {
+    "SERVICE_NAME": "ZenVQ Universal Translation Edge API",
+    "API_VERSION": "2.0.0"
+  }
+}

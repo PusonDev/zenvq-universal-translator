@@ -1,0 +1,180 @@
+<!--
+  ZenVQ Universal Live Translator — Static & Webflow / WordPress / Shopify Snippet
+  Zero external dependencies. Auto-injects floating pill or mounts inside any container.
+-->
+
+<!-- OPTION 1: Standalone Floating Widget (Simplest: Paste before </body>) -->
+<script
+  src="https://tools.zenvq.com/lib/zenvq-translate.js"
+  data-auto-widget="true"
+  defer
+></script>
+
+<!-- 
+  OPTION 2: Local Script Injection (For Next.js / Static HTML hosted locally)
+  1. Copy core/zenvq-translate.js to your public/lib/zenvq-translate.js
+  2. Add the script tag to your <head> or <body>:
+-->
+<!--
+<script src="/lib/zenvq-translate.js" defer></script>
+-->
+
+<!--
+  OPTION 3: Custom In-Navbar Header Pill (Pure HTML / CSS / Vanilla JS)
+  Include this container anywhere inside your header or navbar:
+-->
+<div
+  id="zenvq-navbar-language-dock"
+  class="notranslate"
+  translate="no"
+  dir="ltr"
+  style="direction: ltr !important; unicode-bidi: isolate !important; display: inline-block; position: relative;"
+>
+  <button
+    id="zenvq-dock-trigger-btn"
+    type="button"
+    aria-label="Select translation language"
+    style="
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.05);
+      color: #f4f4f5;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    "
+  >
+    <svg style="width: 14px; height: 14px; color: #00E599;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+    </svg>
+    <span id="zenvq-current-lang-text">English</span>
+    <span style="font-size: 10px; color: #a1a1aa;">(EN)</span>
+    <svg style="width: 12px; height: 12px; color: #71717a;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+
+  <div
+    id="zenvq-dock-dropdown-menu"
+    class="notranslate"
+    translate="no"
+    dir="ltr"
+    style="
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 280px;
+      max-height: 320px;
+      overflow-y: auto;
+      background: rgba(17, 17, 20, 0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      padding: 8px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85);
+      z-index: 999999;
+      direction: ltr !important;
+      unicode-bidi: isolate !important;
+    "
+  >
+    <!-- Header of Dropdown -->
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 8px 8px 8px; border-bottom: 1px solid #1f1f23; margin-bottom: 6px; font-family: ui-monospace, monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: #a1a1aa;">
+      <span>Live DOM Translator</span>
+      <span style="color: #00E599; background: #18181b; border: 1px solid #27272a; padding: 2px 6px; border-radius: 4px;">12 Markets</span>
+    </div>
+
+    <!-- Container for dynamic buttons -->
+    <div id="zenvq-lang-options-list" style="display: flex; flex-direction: column; gap: 2px;"></div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const trigger = document.getElementById("zenvq-dock-trigger-btn");
+    const menu = document.getElementById("zenvq-dock-dropdown-menu");
+    const list = document.getElementById("zenvq-lang-options-list");
+    const label = document.getElementById("zenvq-current-lang-text");
+    if (!trigger || !menu || !list) return;
+
+    const languages = [
+      { code: "en", name: "English", native: "English", region: "Global Default", badge: "EN" },
+      { code: "bn", name: "Bengali", native: "বাংলা", region: "Bangladesh Hub", badge: "বাং" },
+      { code: "ar", name: "Arabic", native: "العربية", region: "UAE / KSA / GCC", badge: "ع" },
+      { code: "es", name: "Spanish", native: "Español", region: "USA / Spain", badge: "ES" },
+      { code: "fr", name: "French", native: "Français", region: "France / EU", badge: "FR" },
+      { code: "de", name: "German", native: "Deutsch", region: "Germany / DACH", badge: "DE" },
+      { code: "nl", name: "Dutch", native: "Nederlands", region: "Netherlands", badge: "NL" },
+      { code: "it", name: "Italian", native: "Italiano", region: "Italy / EU", badge: "IT" },
+      { code: "pt", name: "Portuguese", native: "Português", region: "EU / Brazil", badge: "PT" },
+      { code: "hi", name: "Hindi", native: "हिन्दी", region: "South Asia", badge: "हि" },
+      { code: "ur", name: "Urdu", native: "اردو", region: "South Asia / GCC", badge: "ار" },
+      { code: "zh-CN", name: "Chinese", native: "简体中文", region: "Asia Pacific", badge: "中" }
+    ];
+
+    function renderOptions(activeCode) {
+      list.innerHTML = "";
+      languages.forEach(function (l) {
+        const isSelected = l.code === activeCode;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.style.cssText = "display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 8px 10px; border-radius: 8px; border: " + (isSelected ? "1px solid rgba(255,255,255,0.12)" : "1px solid transparent") + "; background: " + (isSelected ? "rgba(255,255,255,0.08)" : "transparent") + "; color: #f4f4f5; font-size: 12px; cursor: pointer; text-align: left; transition: all 0.15s ease;";
+        btn.innerHTML =
+          '<div style="display: flex; align-items: center; gap: 8px;">' +
+            '<span style="font-family: monospace; font-size: 11px; width: 24px; color: ' + (isSelected ? '#00E599' : '#a1a1aa') + '; font-weight: 600;">' + l.badge + '</span>' +
+            '<div>' +
+              '<div style="font-weight: 500; color: #fff;">' + l.native + (l.native !== l.name ? ' <span style="font-size: 10px; color: #a1a1aa;">(' + l.name + ')</span>' : '') + '</div>' +
+              '<div style="font-size: 10px; color: #71717a; font-family: monospace;">' + l.region + '</div>' +
+            '</div>' +
+          '</div>' +
+          (isSelected ? '<span style="color: #00E599; font-weight: bold;">✓</span>' : '');
+
+        btn.onmouseover = function () {
+          if (!isSelected) btn.style.background = "rgba(255,255,255,0.04)";
+        };
+        btn.onmouseout = function () {
+          if (!isSelected) btn.style.background = "transparent";
+        };
+        btn.onclick = function () {
+          if (window.ZenVQTranslate && typeof window.ZenVQTranslate.setLanguage === "function") {
+            window.ZenVQTranslate.setLanguage(l.code);
+          } else {
+            localStorage.setItem("zenvq_live_lang", l.code);
+          }
+          if (label) label.textContent = l.native;
+          menu.style.display = "none";
+          renderOptions(l.code);
+        };
+        list.appendChild(btn);
+      });
+    }
+
+    const currentLang = localStorage.getItem("zenvq_live_lang") || "en";
+    const found = languages.find(function (l) { return l.code === currentLang; });
+    if (found && label) label.textContent = found.native;
+    renderOptions(currentLang);
+
+    trigger.onclick = function (e) {
+      e.stopPropagation();
+      menu.style.display = menu.style.display === "none" ? "block" : "none";
+    };
+
+    document.addEventListener("click", function () {
+      menu.style.display = "none";
+    });
+
+    window.addEventListener("zenvq-lang-changed", function (e) {
+      const code = e.detail && e.detail.lang ? e.detail.lang : "en";
+      const meta = languages.find(function (l) { return l.code === code; });
+      if (meta && label) label.textContent = meta.native;
+      renderOptions(code);
+    });
+  })();
+</script>
