@@ -415,6 +415,11 @@
 
     if (document.getElementById("zenvq-auto-widget-pill")) return;
 
+    // Do not inject floating widget if a ZenVQ Language Dock already exists in the DOM
+    if (document.querySelector('[data-zenvq-dock="true"]') || document.querySelector('.zenvq-lang-dock')) {
+      return;
+    }
+
     const widget = document.createElement("div");
     widget.id = "zenvq-auto-widget-pill";
     widget.className = "notranslate";

@@ -39,13 +39,15 @@ interface ZenVQLanguageDockProps {
   theme?: "engineering" | "creative" | "auto" | "botanical";
   isLightMode?: boolean;
   className?: string;
+  dropDirection?: "down" | "up";
 }
 
 export function ZenVQLanguageDock({
   variant = "header",
   theme = "engineering",
   isLightMode = false,
-  className = ""
+  className = "",
+  dropDirection = "down"
 }: ZenVQLanguageDockProps) {
   const [currentCode, setCurrentCode] = useState<string>("en");
   const [isOpen, setIsOpen] = useState(false);
@@ -280,16 +282,16 @@ export function ZenVQLanguageDock({
         </svg>
       </button>
 
-      {/* Popover Language Palette: 12 Mandatory Market Languages */}
+      {/* Popover Language Palette: 13 Mandatory Market Languages */}
       {isOpen && (
         <div
           data-zenvq-stable="true"
           dir="ltr"
           style={{ direction: "ltr", unicodeBidi: "isolate" }}
           className={`notranslate absolute ${
-            variant === "mobile"
-              ? "bottom-full mb-2 left-0 right-0 w-full"
-              : "top-full mt-2.5 right-0 w-72 sm:w-80"
+            dropDirection === "up"
+              ? "bottom-full mb-2.5 right-0 w-72 sm:w-80 max-w-[calc(100vw-1.5rem)]"
+              : "top-full mt-2.5 right-0 w-72 sm:w-80 max-w-[calc(100vw-1.5rem)]"
           } rounded-xl border p-2 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-2xl ${
             isLightMode
               ? "border-slate-200 bg-white/95 text-slate-900 shadow-[0_20px_50px_rgba(15,23,42,0.14)]"

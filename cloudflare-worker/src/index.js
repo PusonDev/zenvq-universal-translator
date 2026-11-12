@@ -1,18 +1,19 @@
 import { ENGINE_SCRIPT } from "./engineCode.js";
 
 const LANGUAGES = [
-  { code: "en", name: "English", native: "English", region: "Global Default", dir: "ltr", badge: "EN" },
+  { code: "en", name: "English", native: "English", region: "Global / US / UK", dir: "ltr", badge: "EN" },
   { code: "bn", name: "Bengali", native: "বাংলা", region: "Bangladesh Hub", dir: "ltr", badge: "বাং" },
   { code: "ar", name: "Arabic", native: "العربية", region: "UAE / KSA / GCC", dir: "rtl", badge: "ع" },
-  { code: "es", name: "Spanish", native: "Español", region: "USA / Spain", dir: "ltr", badge: "ES" },
-  { code: "fr", name: "French", native: "Français", region: "France / EU", dir: "ltr", badge: "FR" },
   { code: "de", name: "German", native: "Deutsch", region: "Germany / DACH", dir: "ltr", badge: "DE" },
-  { code: "nl", name: "Dutch", native: "Nederlands", region: "Netherlands", dir: "ltr", badge: "NL" },
-  { code: "it", name: "Italian", native: "Italiano", region: "Italy / EU", dir: "ltr", badge: "IT" },
+  { code: "fr", name: "French", native: "Français", region: "France / EU", dir: "ltr", badge: "FR" },
+  { code: "es", name: "Spanish", native: "Español", region: "Americas / Spain", dir: "ltr", badge: "ES" },
+  { code: "it", name: "Italian", native: "Italiano", region: "Italy / EU Luxury", dir: "ltr", badge: "IT" },
+  { code: "nl", name: "Dutch", native: "Nederlands", region: "Netherlands Tech", dir: "ltr", badge: "NL" },
   { code: "pt", name: "Portuguese", native: "Português", region: "EU / Brazil", dir: "ltr", badge: "PT" },
-  { code: "hi", name: "Hindi", native: "हिन्दी", region: "South Asia", dir: "ltr", badge: "हि" },
+  { code: "ja", name: "Japanese", native: "日本語", region: "Japan Tech & Design", dir: "ltr", badge: "日" },
+  { code: "zh-CN", name: "Chinese", native: "简体中文", region: "Asia Pacific", dir: "ltr", badge: "中" },
   { code: "ur", name: "Urdu", native: "اردو", region: "South Asia / GCC", dir: "rtl", badge: "ار" },
-  { code: "zh-CN", name: "Chinese", native: "简体中文", region: "Asia Pacific", dir: "ltr", badge: "中" }
+  { code: "hi", name: "Hindi", native: "हिन्दी", region: "South Asia", dir: "ltr", badge: "हि" }
 ];
 
 const CORS_HEADERS = {
