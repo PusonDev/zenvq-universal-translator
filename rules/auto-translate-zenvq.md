@@ -46,3 +46,9 @@ Always enforce the identical 13 core languages in this exact logical order acros
 4. Add `translate="no"` / `className="notranslate"` to brand logos, code snippets and PIN inputs.
 5. Alternatively, run the universal install script:
    `powershell -ExecutionPolicy Bypass -File "D:\All coding installation tools\All My Main Project in real world\all extra rules, scripts, task etc for long hold\all sites translations all things\scripts\install-translator.ps1" -TargetProject "<project-path>"`
+
+## 5. CLIENT NATIVE LANGUAGE AUTO-DETECTION & USER PREFERENCE LAW
+- **First-Time Client Default:** When a visitor opens the site for the first time without prior saved preferences, the engine inspects `navigator.languages` and `navigator.language` to match their OS or browser locale against the 13 supported languages.
+- **Immediate Auto-Open:** If the visitor's device is set to German (`de`), Arabic (`ar`), French (`fr`), Spanish (`es`), Bengali (`bn`), Japanese (`ja`), Chinese (`zh-CN`), Urdu (`ur`), Hindi (`hi`), Italian (`it`), Dutch (`nl`) or Portuguese (`pt`), the site opens directly in their native language with sub-300ms above-the-fold translation.
+- **URL Override (`?lang=<code>`):** External marketing campaigns, WhatsApp outreach and proposals can pass `?lang=<code>` (e.g. `?lang=ar`) to instantly force that language.
+- **Permanent Manual Override:** Once the user clicks any language in the dock or selector, their explicit choice is saved in `localStorage` (`zenvq_live_lang`) and permanently overrides automatic browser detection across all future visits.

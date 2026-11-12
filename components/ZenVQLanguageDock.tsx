@@ -66,13 +66,73 @@ export function ZenVQLanguageDock({
     }
   }, [theme]);
 
-  // Sync active language from localStorage and custom event on mount
+  // Helper to match browser locale to one of our 13 languages
+  const matchSupportedLanguage = (localeStr: string): string | null => {
+    if (!localeStr || typeof localeStr !== "string") return null;
+    const clean = localeStr.toLowerCase().trim();
+    if (clean.startsWith("bn")) return "bn";
+    if (clean.startsWith("ar")) return "ar";
+    if (clean.startsWith("de")) return "de";
+    if (clean.startsWith("fr")) return "fr";
+    if (clean.startsWith("es")) return "es";
+    if (clean.startsWith("it")) return "it";
+    if (clean.startsWith("nl")) return "nl";
+    if (clean.startsWith("pt")) return "pt";
+    if (clean.startsWith("ja")) return "ja";
+    if (clean.startsWith("zh")) return "zh-CN";
+    if (clean.startsWith("ur")) return "ur";
+    if (clean.startsWith("hi")) return "hi";
+    if (clean.startsWith("en")) return "en";
+    return null;
+  };
+
+  const detectClientLanguage = (): string => {
+    try {
+      if (typeof window !== "undefined") {
+        if (window.location && window.location.search) {
+          const params = new URLSearchParams(window.location.search);
+          const urlLang = params.get("lang");
+          if (urlLang) {
+            const matched = matchSupportedLanguage(urlLang);
+            if (matched) return matched;
+          }
+        }
+        const saved = localStorage.getItem("zenvq_live_lang");
+        if (saved && ZENVQ_LANGUAGES.some((l) => l.code === saved)) {
+          return saved;
+        }
+        const candidates: string[] = [];
+        if (Array.isArray(navigator.languages)) {
+          candidates.push(...navigator.languages);
+        }
+        if (navigator.language) candidates.push(navigator.language);
+        try {
+          const intlLocale = Intl.DateTimeFormat().resolvedOptions().locale;
+          if (intlLocale) candidates.push(intlLocale);
+        } catch {}
+        for (const cand of candidates) {
+          const matched = matchSupportedLanguage(cand);
+          if (matched) return matched;
+        }
+      }
+    } catch {}
+    return "en";
+  };
+
+  // Sync active language from translator engine, browser detection or custom event on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("zenvq_live_lang");
-      if (saved && ZENVQ_LANGUAGES.some((l) => l.code === saved)) {
-        setCurrentCode(saved);
+      const translator = (window as unknown as {
+        ZenVQTranslate?: { getCurrentLanguage?: () => string };
+      }).ZenVQTranslate;
+
+      let initial = "en";
+      if (translator && typeof translator.getCurrentLanguage === "function") {
+        initial = translator.getCurrentLanguage();
+      } else {
+        initial = detectClientLanguage();
       }
+      setCurrentCode(initial);
 
       const handleLangChange = (e: Event) => {
         const customEvent = e as CustomEvent<{ lang: string }>;
@@ -119,6 +179,9 @@ export function ZenVQLanguageDock({
 
     try {
       if (typeof window !== "undefined") {
+        localStorage.setItem("zenvq_live_lang", code);
+        localStorage.setItem("zenvq_lang_user_selected", "true");
+
         const translator = (window as unknown as {
           ZenVQTranslate?: { setLanguage: (c: string) => Promise<void> | void };
         }).ZenVQTranslate;
@@ -126,7 +189,6 @@ export function ZenVQLanguageDock({
         if (translator && typeof translator.setLanguage === "function") {
           await translator.setLanguage(code);
         } else {
-          localStorage.setItem("zenvq_live_lang", code);
           const meta = ZENVQ_LANGUAGES.find((l) => l.code === code) || ZENVQ_LANGUAGES[0];
           document.documentElement.setAttribute("lang", code);
           document.documentElement.setAttribute("dir", meta.dir);

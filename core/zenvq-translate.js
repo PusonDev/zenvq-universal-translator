@@ -56,7 +56,75 @@
   const PROTECTED_PATTERNS = /^(\d+[%$€£¥+-]*|[+$€£¥]\d[\d,.]*|https?:\/\/\S+|\S+@\S+\.\S+|\+?[\d\s()-]{7,}|ZenVQ|ZVQP|zvqultra)$/i;
 
   const originalTextMap = new WeakMap();
-  let currentLang = localStorage.getItem("zenvq_live_lang") || "en";
+
+  function matchSupportedLanguage(localeStr) {
+    if (!localeStr || typeof localeStr !== "string") return null;
+    const clean = localeStr.toLowerCase().trim();
+    if (clean.startsWith("bn")) return "bn";
+    if (clean.startsWith("ar")) return "ar";
+    if (clean.startsWith("de")) return "de";
+    if (clean.startsWith("fr")) return "fr";
+    if (clean.startsWith("es")) return "es";
+    if (clean.startsWith("it")) return "it";
+    if (clean.startsWith("nl")) return "nl";
+    if (clean.startsWith("pt")) return "pt";
+    if (clean.startsWith("ja")) return "ja";
+    if (clean.startsWith("zh")) return "zh-CN";
+    if (clean.startsWith("ur")) return "ur";
+    if (clean.startsWith("hi")) return "hi";
+    if (clean.startsWith("en")) return "en";
+    return null;
+  }
+
+  function detectInitialLanguage() {
+    try {
+      // 1. URL Query Parameter Override (?lang=ar or ?lang=de)
+      if (typeof window !== "undefined" && window.location && window.location.search) {
+        const params = new URLSearchParams(window.location.search);
+        const urlLang = params.get("lang");
+        if (urlLang) {
+          const matched = matchSupportedLanguage(urlLang);
+          if (matched) {
+            localStorage.setItem("zenvq_live_lang", matched);
+            return matched;
+          }
+        }
+      }
+
+      // 2. Saved User Preference (from earlier manual selection or visit)
+      const saved = localStorage.getItem("zenvq_live_lang");
+      if (saved && LANGUAGES.some(function (l) { return l.code === saved; })) {
+        return saved;
+      }
+
+      // 3. Auto-Detect Browser and OS Native Language Preferences
+      const candidates = [];
+      if (typeof navigator !== "undefined") {
+        if (Array.isArray(navigator.languages) && navigator.languages.length > 0) {
+          for (let i = 0; i < navigator.languages.length; i++) {
+            candidates.push(navigator.languages[i]);
+          }
+        }
+        if (navigator.language) candidates.push(navigator.language);
+        if (navigator.userLanguage) candidates.push(navigator.userLanguage);
+      }
+      try {
+        const intlLocale = Intl.DateTimeFormat().resolvedOptions().locale;
+        if (intlLocale) candidates.push(intlLocale);
+      } catch (e) {}
+
+      for (let i = 0; i < candidates.length; i++) {
+        const match = matchSupportedLanguage(candidates[i]);
+        if (match) {
+          return match;
+        }
+      }
+    } catch (e) {}
+
+    return "en";
+  }
+
+  let currentLang = detectInitialLanguage();
   let isMutating = false;
   let observerTimer = null;
 
@@ -223,11 +291,14 @@
     return results;
   }
 
-  async function applyLanguage(targetLang, root) {
+  async function applyLanguage(targetLang, root, isManual) {
     const targetRoot = root || document.body;
     if (!targetRoot) return;
     currentLang = targetLang;
     localStorage.setItem("zenvq_live_lang", targetLang);
+    if (isManual) {
+      localStorage.setItem("zenvq_lang_user_selected", "true");
+    }
 
     const langMeta = LANGUAGES.find((l) => l.code === targetLang) || LANGUAGES[0];
     document.documentElement.setAttribute("lang", targetLang);
@@ -365,8 +436,9 @@
       item.onmouseover = function () { item.style.background = "rgba(255,255,255,0.1)"; };
       item.onmouseout = function () { item.style.background = "transparent"; };
       item.onclick = function () {
-        applyLanguage(l.code, document.body);
-        document.getElementById("zvq-widget-label").textContent = l.native;
+        applyLanguage(l.code, document.body, true);
+        const widgetLabel = document.getElementById("zvq-widget-label");
+        if (widgetLabel) widgetLabel.textContent = l.native;
         menu.style.display = "none";
       };
       menu.appendChild(item);
@@ -390,8 +462,9 @@
   window.ZenVQTranslate = {
     languages: LANGUAGES,
     getCurrentLanguage: function () { return currentLang; },
-    setLanguage: function (langCode) { return applyLanguage(langCode, document.body); },
-    refresh: function () { return applyLanguage(currentLang, document.body); }
+    getDetectedLanguage: function () { return detectInitialLanguage(); },
+    setLanguage: function (langCode) { return applyLanguage(langCode, document.body, true); },
+    refresh: function () { return applyLanguage(currentLang, document.body, false); }
   };
 
   function init() {
