@@ -24,20 +24,28 @@
     };
   }
 
-  // 12 Mandatory Global Market Languages
+    // 13 Mandatory Global Market Languages (Unified Ecosystem Sequence)
   const LANGUAGES = [
-    { code: "en", name: "English", native: "English", region: "US / UK / Global", dir: "ltr", badge: "EN" },
-    { code: "bn", name: "Bengali", native: "বাংলা", region: "Bangladesh", dir: "ltr", badge: "বাং" },
-    { code: "ar", name: "Arabic", native: "العربية", region: "UAE / KSA / Middle East", dir: "rtl", badge: "ع" },
-    { code: "es", name: "Spanish", native: "Español", region: "USA / Spain / EU", dir: "ltr", badge: "ES" },
-    { code: "fr", name: "French", native: "Français", region: "France / Canada / EU", dir: "ltr", badge: "FR" },
+    // 1. Core Primary Hubs (Global Standard, Native Hub, Middle East & GCC)
+    { code: "en", name: "English", native: "English", region: "Global / US / UK", dir: "ltr", badge: "EN" },
+    { code: "bn", name: "Bengali", native: "বাংলা", region: "Bangladesh Hub", dir: "ltr", badge: "বাং" },
+    { code: "ar", name: "Arabic", native: "العربية", region: "UAE / KSA / GCC", dir: "rtl", badge: "ع" },
+
+    // 2. High-Ticket European & Western Enterprise Markets
     { code: "de", name: "German", native: "Deutsch", region: "Germany / DACH", dir: "ltr", badge: "DE" },
-    { code: "nl", name: "Dutch", native: "Nederlands", region: "Netherlands / EU", dir: "ltr", badge: "NL" },
-    { code: "it", name: "Italian", native: "Italiano", region: "Italy / EU", dir: "ltr", badge: "IT" },
+    { code: "fr", name: "French", native: "Français", region: "France / EU", dir: "ltr", badge: "FR" },
+    { code: "es", name: "Spanish", native: "Español", region: "Americas / Spain", dir: "ltr", badge: "ES" },
+    { code: "it", name: "Italian", native: "Italiano", region: "Italy / EU Luxury", dir: "ltr", badge: "IT" },
+    { code: "nl", name: "Dutch", native: "Nederlands", region: "Netherlands Tech", dir: "ltr", badge: "NL" },
     { code: "pt", name: "Portuguese", native: "Português", region: "EU / Brazil", dir: "ltr", badge: "PT" },
-    { code: "hi", name: "Hindi", native: "हिन्दी", region: "South Asia", dir: "ltr", badge: "हि" },
+
+    // 3. Premier East Asian Technology & Design Markets
+    { code: "ja", name: "Japanese", native: "日本語", region: "Japan Tech & Design", dir: "ltr", badge: "日" },
+    { code: "zh-CN", name: "Chinese", native: "简体中文", region: "Asia Pacific", dir: "ltr", badge: "中" },
+
+    // 4. Regional South Asian & GCC Diaspora Markets
     { code: "ur", name: "Urdu", native: "اردو", region: "South Asia / GCC", dir: "rtl", badge: "ار" },
-    { code: "zh-CN", name: "Chinese", native: "简体中文", region: "Asia Pacific", dir: "ltr", badge: "中" }
+    { code: "hi", name: "Hindi", native: "हिन्दी", region: "South Asia", dir: "ltr", badge: "हि" }
   ];
 
   const SKIP_TAGS = new Set([
@@ -82,10 +90,32 @@
     return false;
   }
 
+  function isHighPriorityNode(node) {
+    let parent = node.parentElement;
+    let depth = 0;
+    while (parent && depth < 5) {
+      const tag = parent.tagName;
+      if (tag === "HEADER" || tag === "NAV" || tag === "H1" || tag === "H2" || tag === "BUTTON") {
+        return true;
+      }
+      if (
+        parent.hasAttribute("data-priority") ||
+        parent.classList.contains("hero") ||
+        parent.classList.contains("header")
+      ) {
+        return true;
+      }
+      parent = parent.parentElement;
+      depth++;
+    }
+    return false;
+  }
+
   function collectTranslatableNodes(root) {
     const targetRoot = root || document.body;
-    const nodes = [];
-    if (!targetRoot) return nodes;
+    if (!targetRoot) return [];
+    const priorityNodes = [];
+    const normalNodes = [];
     const walker = document.createTreeWalker(targetRoot, NodeFilter.SHOW_TEXT, {
       acceptNode(node) {
         const raw = node.nodeValue;
@@ -104,9 +134,14 @@
       if (!originalTextMap.has(current)) {
         originalTextMap.set(current, current.nodeValue);
       }
-      nodes.push(current);
+      if (isHighPriorityNode(current)) {
+        priorityNodes.push(current);
+      } else {
+        normalNodes.push(current);
+      }
     }
-    return nodes;
+    // Return high-priority nodes first so header & hero translate in sub-300ms
+    return priorityNodes.concat(normalNodes);
   }
 
   async function fetchSingleString(str, targetLang) {

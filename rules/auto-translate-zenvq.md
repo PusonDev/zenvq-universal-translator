@@ -15,20 +15,21 @@ Whenever the user asks to apply **"auto translate zenvq"** or add multi-language
 - **Canonical Central Hub Source:** The single source of truth for this tool is located at:
   `D:\All coding installation tools\All My Main Project in real world\all extra rules, scripts, task etc for long hold\all sites translations all things`
 
-## 2. MANDATORY 12 TARGET MARKET LANGUAGES
-Always include all 12 core languages matching global and local geography:
-1. `en` — English (US / UK / Global Default, `dir="ltr"`)
-2. `bn` — বাংলা (Bengali - Bangladesh / Local Hub, `dir="ltr"`)
-3. `ar` — العربية (Arabic - UAE / KSA / GCC Diaspora, `dir="rtl"`)
-4. `es` — Español (Spanish - USA / Spain / LatAm, `dir="ltr"`)
-5. `fr` — Français (French - France / EU / Canada, `dir="ltr"`)
-6. `de` — Deutsch (German - Germany / DACH Enterprise, `dir="ltr"`)
-7. `nl` — Nederlands (Dutch - Netherlands / Benelux Tech, `dir="ltr"`)
-8. `it` — Italiano (Italian - Italy / EU Luxury, `dir="ltr"`)
-9. `pt` — Português (Portuguese - Portugal / Brazil, `dir="ltr"`)
-10. `hi` — हिन्दी (Hindi - India / South Asia, `dir="ltr"`)
-11. `ur` — اردو (Urdu - Pakistan / South Asia & GCC, `dir="rtl"`)
-12. `zh-CN` — 简体中文 (Chinese - East Asia / Global, `dir="ltr"`)
+## 2. MANDATORY 13 TARGET MARKET LANGUAGES (UNIFIED ECOSYSTEM SEQUENCE)
+Always enforce the identical 13 core languages in this exact logical order across all sites:
+1. `en` — English (US / UK / Global Default, `dir="ltr"`, Badge: `EN`)
+2. `bn` — বাংলা (Bengali - Bangladesh / Local Hub, `dir="ltr"`, Badge: `বাং`)
+3. `ar` — العربية (Arabic - UAE / KSA / GCC Diaspora, `dir="rtl"`, Badge: `ع`)
+4. `de` — Deutsch (German - Germany / DACH Enterprise, `dir="ltr"`, Badge: `DE`)
+5. `fr` — Français (French - France / EU / Canada, `dir="ltr"`, Badge: `FR`)
+6. `es` — Español (Spanish - USA / Spain / LatAm, `dir="ltr"`, Badge: `ES`)
+7. `it` — Italiano (Italian - Italy / EU Luxury & Design, `dir="ltr"`, Badge: `IT`)
+8. `nl` — Nederlands (Dutch - Netherlands / Benelux Tech Hub, `dir="ltr"`, Badge: `NL`)
+9. `pt` — Português (Portuguese - Portugal / Brazil, `dir="ltr"`, Badge: `PT`)
+10. `ja` — 日本語 (Japanese - Japan Tech & Design, `dir="ltr"`, Badge: `日`)
+11. `zh-CN` — 简体中文 (Chinese - East Asia / Global Commerce, `dir="ltr"`, Badge: `中`)
+12. `ur` — اردو (Urdu - Pakistan / South Asia & GCC, `dir="rtl"`, Badge: `ار`)
+13. `hi` — हिन्दी (Hindi - India / South Asia, `dir="ltr"`, Badge: `हि`)
 
 ## 3. ZERO-DISPLACEMENT UX LAW (STABLE BUTTON LOCATION RULE)
 - **STRICT PERMANENT PROHIBITION:** Regardless of whether the active language is LTR or RTL (`ar` Arabic, `ur` Urdu, etc.), the language switcher dock, button, floating pill and header action controls MUST NEVER shift their physical coordinates or flip sides across the screen.
