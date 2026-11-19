@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 # ZenVQ Universal Translator — Ecosystem-Wide Auto-Deployer
 # ==============================================================================
 # Injects the live translation engine, React dock and agent rules into every
@@ -36,6 +36,15 @@ $Report = @()
 
 foreach ($siteName in $Sites) {
     $sitePath = Join-Path $ProjectsRoot $siteName
+    if (-not (Test-Path $sitePath)) {
+        $templatesPath = Join-Path $ProjectsRoot "ZenVQ-Tools\03-Templates-Hub\$siteName"
+        if (Test-Path $templatesPath) {
+            $sitePath = $templatesPath
+        } elseif ($siteName -eq "templetes.zenvq.com") {
+            $hubPath = Join-Path $ProjectsRoot "ZenVQ-Tools\03-Templates-Hub"
+            if (Test-Path $hubPath) { $sitePath = $hubPath }
+        }
+    }
     Write-Host "---------------------------------------------------------------------" -ForegroundColor DarkGray
     Write-Host "Processing: $siteName" -ForegroundColor Yellow
 

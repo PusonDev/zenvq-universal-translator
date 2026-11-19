@@ -153,3 +153,38 @@ Every implementation must pass these 4 criteria before deployment:
 2. **Stable Dock Position:** Confirm the language dock stays locked at the exact same physical screen coordinate when Arabic or Urdu is active.
 3. **Protected Entity Check:** Ensure currency signs, numbers, logos and code blocks remain completely untouched.
 4. **Console Cleanliness:** Zero errors or React hydration warnings in the browser console.
+
+---
+
+## 7. AUTOMATIC THEME DETECTION & DUAL-MODE (DARK / LIGHT) SYNCHRONIZATION
+
+Whenever the translation tool is called across any project or page, it automatically detects and adapts to the active color theme:
+
+```mermaid
+flowchart TD
+    A["ZenVQLanguageDock / Tool Called"] --> B{"Explicit isLightMode prop provided?"}
+    B -- "Yes" --> C["Use explicit boolean prop value"]
+    B -- "No" --> D["Auto-Detect DOM & Environment Theme"]
+    D --> E["1. Check html.classList ('light' vs 'dark')"]
+    D --> F["2. Check html[data-theme] ('light' vs 'dark' / 'purple')"]
+    D --> G["3. Check body.classList ('light' vs 'dark')"]
+    D --> H["4. Check localStorage ('theme' / 'theme-preference')"]
+    D --> I["5. Check OS prefers-color-scheme"]
+    E & F & G & H & I --> J{"Is Theme Light or Dark?"}
+    J -- "Light Mode" --> K["Apply Light Surface Tokens: border-slate-200, bg-white/95, text-slate-900"]
+    J -- "Dark Mode" --> L["Apply Dark Luxury Tokens: border-white/10, bg-[#111114]/95, text-white"]
+    K & L --> M["Attach MutationObserver to html & body attributes"]
+    M --> N["User toggles theme button anywhere on site -> Dock instant re-skin"]
+```
+
+### Contrast Token Specifications:
+- **Dark Mode (Default):**
+  - Trigger Button: `bg-white/[0.04] text-slate-300 border-white/[0.10] hover:bg-white/[0.08] hover:text-white`
+  - Active Button State: `bg-white/[0.12] text-white border-white/20 shadow-sm`
+  - Popover Palette: `bg-[#111114]/95 text-white border-[#27272A] shadow-[0_16px_48px_rgba(0,0,0,0.85)]`
+  - Active Language Pill: `bg-white/[0.10] text-white font-semibold border border-white/[0.10]`
+- **Light Mode:**
+  - Trigger Button: `bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200/80 hover:text-slate-900`
+  - Active Button State: `bg-slate-200 text-slate-900 border-slate-300 shadow-sm`
+  - Popover Palette: `bg-white/95 text-slate-900 border-slate-200 shadow-[0_20px_50px_rgba(15,23,42,0.14)]`
+  - Active Language Pill: `bg-slate-100 text-slate-900 font-semibold border border-slate-200 shadow-xs`

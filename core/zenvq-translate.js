@@ -400,6 +400,32 @@
         z-index: 999999 !important;
         direction: ltr !important;
       }
+      /* Automatic Dark & Light Mode Support for Floating Widget */
+      html.light #zenvq-auto-widget-pill button,
+      body.light #zenvq-auto-widget-pill button,
+      [data-theme="light"] #zenvq-auto-widget-pill button {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid rgba(15, 23, 42, 0.15) !important;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1) !important;
+      }
+      html.light #zenvq-auto-widget-pill > div,
+      body.light #zenvq-auto-widget-pill > div,
+      [data-theme="light"] #zenvq-auto-widget-pill > div {
+        background: #ffffff !important;
+        border: 1px solid rgba(15, 23, 42, 0.15) !important;
+        box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12) !important;
+      }
+      html.light #zenvq-auto-widget-pill > div button,
+      body.light #zenvq-auto-widget-pill > div button,
+      [data-theme="light"] #zenvq-auto-widget-pill > div button {
+        color: #1e293b !important;
+      }
+      html.light #zenvq-auto-widget-pill > div button:hover,
+      body.light #zenvq-auto-widget-pill > div button:hover,
+      [data-theme="light"] #zenvq-auto-widget-pill > div button:hover {
+        background: rgba(15, 23, 42, 0.06) !important;
+      }
       header[data-zenvq-nav-anchor],
       nav[data-zenvq-nav-anchor] {
         direction: ltr !important;

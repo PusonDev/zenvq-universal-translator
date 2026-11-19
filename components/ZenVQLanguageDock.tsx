@@ -45,7 +45,7 @@ interface ZenVQLanguageDockProps {
 export function ZenVQLanguageDock({
   variant = "header",
   theme = "engineering",
-  isLightMode = false,
+  isLightMode,
   className = "",
   dropDirection = "down"
 }: ZenVQLanguageDockProps) {
@@ -53,7 +53,84 @@ export function ZenVQLanguageDock({
   const [isOpen, setIsOpen] = useState(false);
   const [isTranslating, setIsTranslating] = useState(false);
   const [isCreative, setIsCreative] = useState(theme === "creative");
+  const [activeLightMode, setActiveLightMode] = useState<boolean>(() => {
+    if (typeof isLightMode === "boolean") return isLightMode;
+    return false;
+  });
   const dockRef = useRef<HTMLDivElement>(null);
+
+  // Dynamic Dark & Light Theme Ingestion Cascade with Mutation Observer
+  useEffect(() => {
+    if (typeof isLightMode === "boolean") {
+      setActiveLightMode(isLightMode);
+      return;
+    }
+    if (typeof window === "undefined") return;
+
+    const detectCurrentTheme = (): boolean => {
+      try {
+        const html = document.documentElement;
+        const body = document.body;
+
+        // 1. Root DOM class inspection
+        if (html.classList.contains("light")) return true;
+        if (html.classList.contains("dark")) return false;
+
+        // 2. Root data-theme or data-mode attribute
+        const dataTheme = html.getAttribute("data-theme") || html.getAttribute("data-mode");
+        if (dataTheme === "light") return true;
+        if (dataTheme === "dark") return false;
+
+        // 3. Body class inspection
+        if (body && body.classList.contains("light")) return true;
+        if (body && body.classList.contains("dark")) return false;
+
+        // 4. Stored user theme preference
+        const savedTheme = localStorage.getItem("theme") || localStorage.getItem("theme-preference") || localStorage.getItem("zenvq_theme");
+        if (savedTheme === "light") return true;
+        if (savedTheme === "dark") return false;
+
+        // 5. System OS preference fallback
+        if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) {
+          return true;
+        }
+      } catch {}
+      return false;
+    };
+
+    setActiveLightMode(detectCurrentTheme());
+
+    const observer = new MutationObserver(() => {
+      setActiveLightMode(detectCurrentTheme());
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class", "data-theme", "data-mode"]
+    });
+
+    if (document.body) {
+      observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ["class", "data-theme"]
+      });
+    }
+
+    const mediaQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: light)") : null;
+    const handleMediaChange = () => {
+      setActiveLightMode(detectCurrentTheme());
+    };
+    if (mediaQuery && mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", handleMediaChange);
+    }
+
+    return () => {
+      observer.disconnect();
+      if (mediaQuery && mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener("change", handleMediaChange);
+      }
+    };
+  }, [isLightMode]);
 
   // Detect route for dynamic theme accent
   useEffect(() => {
@@ -225,7 +302,7 @@ export function ZenVQLanguageDock({
         aria-haspopup="true"
         aria-label="Select translation language"
         className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-mono transition-all border cursor-pointer ${
-          isLightMode
+          activeLightMode
             ? isOpen
               ? "bg-slate-200 text-slate-900 border-slate-300 shadow-sm"
               : "bg-slate-100 text-slate-700 hover:text-slate-900 hover:bg-slate-200/80 border-slate-200"
@@ -257,14 +334,14 @@ export function ZenVQLanguageDock({
         )}
         <span
           className={`font-sans font-medium text-xs ${
-            isLightMode ? "text-slate-800" : "text-[#F4F4F5]"
+            activeLightMode ? "text-slate-800" : "text-[#F4F4F5]"
           }`}
         >
           {activeMeta.native}
         </span>
         <span
           className={`text-[10px] uppercase tracking-wider hidden sm:inline ${
-            isLightMode ? "text-slate-500" : "text-[#A1A1AA]"
+            activeLightMode ? "text-slate-500" : "text-[#A1A1AA]"
           }`}
         >
           ({activeMeta.badge})
@@ -272,7 +349,7 @@ export function ZenVQLanguageDock({
         <svg
           className={`w-3 h-3 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
-          } ${isLightMode ? "text-slate-500" : "text-[#71717A]"}`}
+          } ${activeLightMode ? "text-slate-500" : "text-[#71717A]"}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -293,7 +370,7 @@ export function ZenVQLanguageDock({
               ? "bottom-full mb-2.5 right-0 w-72 sm:w-80 max-w-[calc(100vw-1.5rem)]"
               : "top-full mt-2.5 right-0 w-72 sm:w-80 max-w-[calc(100vw-1.5rem)]"
           } rounded-xl border p-2 z-50 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-2xl ${
-            isLightMode
+            activeLightMode
               ? "border-slate-200 bg-white/95 text-slate-900 shadow-[0_20px_50px_rgba(15,23,42,0.14)]"
               : "border-[#27272A] bg-[#111114]/95 text-white shadow-[0_16px_48px_rgba(0,0,0,0.85)]"
           }`}
@@ -301,12 +378,12 @@ export function ZenVQLanguageDock({
           {/* Header of Dock */}
           <div
             className={`px-2.5 py-1.5 border-b mb-1.5 flex items-center justify-between text-[11px] font-mono ${
-              isLightMode ? "border-slate-100" : "border-[#1F1F23]"
+              activeLightMode ? "border-slate-100" : "border-[#1F1F23]"
             }`}
           >
             <span
               className={`uppercase tracking-wider ${
-                isLightMode ? "text-slate-500" : "text-[#A1A1AA]"
+                activeLightMode ? "text-slate-500" : "text-[#A1A1AA]"
               }`}
             >
               Live DOM Translator
@@ -314,7 +391,7 @@ export function ZenVQLanguageDock({
             <span
               style={{ color: accentColor }}
               className={`px-1.5 py-0.5 rounded border text-[10px] font-semibold ${
-                isLightMode
+                activeLightMode
                   ? "bg-slate-100 border-slate-200"
                   : "bg-[#18181B] border-[#27272A]"
               }`}
@@ -334,10 +411,10 @@ export function ZenVQLanguageDock({
                   onClick={() => selectLanguage(lang.code)}
                   className={`w-full flex items-center justify-between px-2.5 py-2 rounded-lg text-left text-xs transition-all cursor-pointer ${
                     isSelected
-                      ? isLightMode
+                      ? activeLightMode
                         ? "bg-slate-100 text-slate-900 font-semibold border border-slate-200"
                         : "bg-white/[0.10] text-white font-semibold border border-white/[0.10]"
-                      : isLightMode
+                      : activeLightMode
                       ? "text-slate-700 hover:text-slate-900 hover:bg-slate-100/80 border border-transparent"
                       : "text-slate-300 hover:text-white hover:bg-white/[0.05] border border-transparent"
                   }`}
@@ -346,7 +423,7 @@ export function ZenVQLanguageDock({
                     <span
                       style={{ color: isSelected ? accentColor : undefined }}
                       className={`font-mono text-[11px] w-6 shrink-0 font-semibold ${
-                        isSelected ? "" : isLightMode ? "text-slate-500" : "text-slate-400"
+                        isSelected ? "" : activeLightMode ? "text-slate-500" : "text-slate-400"
                       }`}
                     >
                       {lang.badge}
@@ -354,14 +431,14 @@ export function ZenVQLanguageDock({
                     <div className="min-w-0">
                       <div
                         className={`font-sans font-medium flex items-center gap-1.5 ${
-                          isLightMode ? "text-slate-900" : "text-slate-100"
+                          activeLightMode ? "text-slate-900" : "text-slate-100"
                         }`}
                       >
                         <span>{lang.native}</span>
                         {lang.native !== lang.name && (
                           <span
                             className={`text-[10px] font-normal ${
-                              isLightMode ? "text-slate-500" : "text-slate-400"
+                              activeLightMode ? "text-slate-500" : "text-slate-400"
                             }`}
                           >
                             ({lang.name})
@@ -370,7 +447,7 @@ export function ZenVQLanguageDock({
                       </div>
                       <div
                         className={`text-[10px] font-mono truncate ${
-                          isLightMode ? "text-slate-400" : "text-slate-500"
+                          activeLightMode ? "text-slate-400" : "text-slate-500"
                         }`}
                       >
                         {lang.region}
@@ -398,7 +475,7 @@ export function ZenVQLanguageDock({
           {/* Footnote on Zero-Server Load & Client-Edge Caching */}
           <div
             className={`mt-2 pt-2 border-t px-2.5 flex items-center justify-between text-[10px] font-mono ${
-              isLightMode
+              activeLightMode
                 ? "border-slate-100 text-slate-500"
                 : "border-[#1F1F23] text-[#A1A1AA]"
             }`}

@@ -52,3 +52,19 @@ Always enforce the identical 13 core languages in this exact logical order acros
 - **Immediate Auto-Open:** If the visitor's device is set to German (`de`), Arabic (`ar`), French (`fr`), Spanish (`es`), Bengali (`bn`), Japanese (`ja`), Chinese (`zh-CN`), Urdu (`ur`), Hindi (`hi`), Italian (`it`), Dutch (`nl`) or Portuguese (`pt`), the site opens directly in their native language with sub-300ms above-the-fold translation.
 - **URL Override (`?lang=<code>`):** External marketing campaigns, WhatsApp outreach and proposals can pass `?lang=<code>` (e.g. `?lang=ar`) to instantly force that language.
 - **Permanent Manual Override:** Once the user clicks any language in the dock or selector, their explicit choice is saved in `localStorage` (`zenvq_live_lang`) and permanently overrides automatic browser detection across all future visits.
+
+## 6. AUTOMATIC THEME DETECTION & DUAL-MODE (DARK / LIGHT) SYNCHRONIZATION LAW
+- **MANDATORY AUTOMATIC THEME BINDING:** Whenever the ZenVQ Translation Tool (`ZenVQLanguageDock` or `zenvq-translate.js`) is called, mounted or rendered in ANY project, it MUST automatically detect, bind and synchronize with the active theme mode (Dark Mode or Light Mode) without requiring manual boolean props.
+- **Why this law exists:** In projects with dynamic theme toggling (e.g. Next.js with `next-themes`, Tailwind CSS `.dark` / `.light` class on `<html>` or `<body>`, `data-theme` attribute or system color schemes), rendering a dark-only language dock on a white canvas causes stark visual clashing, poor contrast and broken aesthetics.
+- **Enforcement Rules:**
+  1. **Zero-Configuration Theme Ingestion:** `ZenVQLanguageDock` automatically detects theme state by cascading through:
+     - Document root class (`document.documentElement.classList.contains("light")` / `contains("dark")`)
+     - Root attribute (`document.documentElement.getAttribute("data-theme")`)
+     - Body class (`document.body.classList`)
+     - Persistent storage (`localStorage.getItem("theme")` or `localStorage.getItem("theme-preference")`)
+     - OS system preference (`window.matchMedia("(prefers-color-scheme: light)").matches`)
+  2. **Live Mutation Observation:** The dock attaches a lightweight `MutationObserver` to `document.documentElement` (`attributes: ["class", "data-theme"]`) and `document.body` so that clicking any theme toggle button anywhere on the page instantly re-skins the trigger button, popover background, borders, text contrast and hover states in real time.
+  3. **Strict Contrast Tokens:**
+     - **Dark Canvas:** Hairline border `border-white/[0.10]`, elevated surface `bg-[#111114]/95 backdrop-blur-2xl`, text `text-[#F4F4F5]`, muted `text-[#A1A1AA]`, active highlight `bg-white/[0.10]`.
+     - **Light Canvas:** Hairline border `border-slate-200`, elevated surface `bg-white/95 backdrop-blur-2xl`, text `text-slate-900`, muted `text-slate-500`, active highlight `bg-slate-100 border-slate-200 shadow-xs`.
+  4. **Standalone Engine Guard:** For non-React vanilla implementations (`zenvq-translate.js`), `#zenvq-auto-widget-pill` and its popover menu automatically adapt their CSS variables and background colors to `.light` and `.dark` ancestor classes.
