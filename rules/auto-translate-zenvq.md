@@ -68,3 +68,14 @@ Always enforce the identical 13 core languages in this exact logical order acros
      - **Dark Canvas:** Hairline border `border-white/[0.10]`, elevated surface `bg-[#111114]/95 backdrop-blur-2xl`, text `text-[#F4F4F5]`, muted `text-[#A1A1AA]`, active highlight `bg-white/[0.10]`.
      - **Light Canvas:** Hairline border `border-slate-200`, elevated surface `bg-white/95 backdrop-blur-2xl`, text `text-slate-900`, muted `text-slate-500`, active highlight `bg-slate-100 border-slate-200 shadow-xs`.
   4. **Standalone Engine Guard:** For non-React vanilla implementations (`zenvq-translate.js`), `#zenvq-auto-widget-pill` and its popover menu automatically adapt their CSS variables and background colors to `.light` and `.dark` ancestor classes.
+
+## 7. UNIFIED DUAL-FEATURE CAPSULE ARCHITECTURE (LANGUAGE + THEME FUSION)
+- **Single-Capsule Benchmark Standard:** Across every website in the ZenVQ ecosystem, language selection and dark/light theme toggling MUST live inside ONE unified capsule component (`ZenVQLanguageDock` for React/Next.js or `#zenvq-auto-widget-pill` for static HTML). Never render redundant standalone `<ThemeToggle />` buttons beside the language dock.
+- **Capsule Anatomy:**
+  1. **Left Trigger:** Globe SVG + active native language name + uppercase badge (`(EN)`, `(বাং)`) + chevron.
+  2. **Hairline Divider:** `1px` vertical separator (`w-px h-3.5`).
+  3. **Right Sub-Control:** Single-click Sun/Moon theme toggle button.
+- **Popover Anatomy:**
+  1. **Quick Display Theme Strip:** Top segmented control (`Dark` / `Light`) inside the opaque popover (`bg-[#111114]` or `bg-white`).
+  2. **13 Global Languages List:** Vertically scrollable list with badge, native name, English name, region and checkmark indicator.
+- **Non-Destructive Mount & Storage Sync:** Never overwrite non-binary site themes (e.g. `data-theme="purple"`) on mount; on explicit user toggle, synchronize `dark`/`light` classes, `data-theme` and ecosystem `localStorage` keys (`zenvq_theme`, `zenvq-theme`, `theme`, `saif-portfolio-theme`, `zenvq_tools_theme`, `ni-theme`).

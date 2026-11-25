@@ -98,7 +98,45 @@ export function ZenVQLanguageDock({
   const [isCreative, setIsCreative] = useState(theme === "creative");
   const dockRef = useRef<HTMLDivElement>(null);
 
-  // Sync theme with documentElement, body and localStorage
+  const detectCurrentMode = (): "dark" | "light" => {
+    try {
+      if (typeof window === "undefined") return "dark";
+      const root = document.documentElement;
+      const body = document.body;
+
+      // 1. Root DOM classes & data-theme attributes
+      if (root.classList.contains("light")) return "light";
+      if (root.classList.contains("dark")) return "dark";
+
+      const attrTheme = root.getAttribute("data-theme") || root.getAttribute("data-mode");
+      if (attrTheme === "light" || attrTheme === "purple") return "light";
+      if (attrTheme === "dark") return "dark";
+
+      if (body && body.classList.contains("light")) return "light";
+      if (body && body.classList.contains("dark")) return "dark";
+
+      // 2. Stored user preference across ecosystem keys
+      const stored =
+        localStorage.getItem("zenvq_theme") ||
+        localStorage.getItem("zenvq-theme") ||
+        localStorage.getItem("theme") ||
+        localStorage.getItem("saif-portfolio-theme") ||
+        localStorage.getItem("zenvq_tools_theme") ||
+        localStorage.getItem("ni-theme") ||
+        localStorage.getItem("theme-preference");
+
+      if (stored === "light" || stored === "purple") return "light";
+      if (stored === "dark") return "dark";
+
+      // 3. System OS fallback
+      if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) {
+        return "light";
+      }
+    } catch {}
+    return "dark";
+  };
+
+  // Sync theme with documentElement, body and localStorage without clobbering on initial mount
   const applyThemeMode = (targetMode: "dark" | "light") => {
     setMode(targetMode);
     if (typeof window === "undefined") return;
@@ -119,8 +157,10 @@ export function ZenVQLanguageDock({
     try {
       localStorage.setItem("theme", targetMode);
       localStorage.setItem("zenvq_theme", targetMode);
+      localStorage.setItem("zenvq-theme", targetMode);
       localStorage.setItem("saif-portfolio-theme", targetMode);
       localStorage.setItem("zenvq_tools_theme", targetMode);
+      localStorage.setItem("ni-theme", targetMode);
       localStorage.setItem("theme-preference", targetMode);
     } catch {}
 
@@ -132,40 +172,11 @@ export function ZenVQLanguageDock({
     setMounted(true);
     if (typeof window === "undefined") return;
 
-    const detectCurrentMode = (): "dark" | "light" => {
-      try {
-        const root = document.documentElement;
-        if (root.classList.contains("light") || root.getAttribute("data-theme") === "light") {
-          return "light";
-        }
-        if (root.classList.contains("dark") || root.getAttribute("data-theme") === "dark") {
-          return "dark";
-        }
-        const stored =
-          localStorage.getItem("zenvq_theme") ||
-          localStorage.getItem("theme") ||
-          localStorage.getItem("saif-portfolio-theme") ||
-          localStorage.getItem("zenvq_tools_theme") ||
-          localStorage.getItem("theme-preference");
-        if (stored === "light" || stored === "dark") {
-          return stored;
-        }
-        if (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) {
-          return "light";
-        }
-      } catch {}
-      return "dark";
-    };
+    // Read active page theme cleanly without overwriting existing site theme (e.g. Suggests purple)
+    setMode(detectCurrentMode());
 
-    const initialMode = detectCurrentMode();
-    setMode(initialMode);
-    applyThemeMode(initialMode);
-
-    // Watch for external theme changes
     const observer = new MutationObserver(() => {
-      const root = document.documentElement;
-      const isLight = root.classList.contains("light") || root.getAttribute("data-theme") === "light";
-      setMode(isLight ? "light" : "dark");
+      setMode(detectCurrentMode());
     });
 
     observer.observe(document.documentElement, {
@@ -173,7 +184,22 @@ export function ZenVQLanguageDock({
       attributeFilter: ["class", "data-theme", "data-mode"]
     });
 
-    return () => observer.disconnect();
+    if (document.body) {
+      observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ["class", "data-theme"]
+      });
+    }
+
+    const handleExternalTheme = () => setMode(detectCurrentMode());
+    window.addEventListener("zenvq-theme-changed", handleExternalTheme);
+    window.addEventListener("theme-change", handleExternalTheme);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("zenvq-theme-changed", handleExternalTheme);
+      window.removeEventListener("theme-change", handleExternalTheme);
+    };
   }, []);
 
   const toggleTheme = (e: React.MouseEvent) => {
@@ -342,7 +368,7 @@ export function ZenVQLanguageDock({
   const activeMeta = ZENVQ_LANGUAGES.find((l) => l.code === currentCode) || ZENVQ_LANGUAGES[0];
   const isBotanical = theme === "botanical";
   const accentColor = isCreative ? "#A855F7" : isBotanical ? "#10B981" : "#00E599";
-  const isLight = mode === "light";
+  const isLight = mounted ? mode === "light" : false;
 
   return (
     <div
@@ -428,7 +454,7 @@ export function ZenVQLanguageDock({
               : "text-zinc-300 hover:text-white hover:bg-white/[0.08]"
           }`}
         >
-          {mounted && isLight ? (
+          {isLight ? (
             <SunIcon className="w-3.5 h-3.5 text-amber-500" />
           ) : (
             <MoonIcon className="w-3.5 h-3.5 text-zinc-300" />
@@ -449,13 +475,13 @@ export function ZenVQLanguageDock({
             direction: "ltr",
             unicodeBidi: "isolate"
           }}
-          className={`notranslate fixed sm:absolute ${
+          className={`notranslate absolute ${
             dropDirection === "up"
-              ? "bottom-20 left-3 right-3 sm:bottom-full sm:left-auto sm:right-0 sm:mb-2.5"
-              : "top-16 left-3 right-3 sm:top-full sm:left-auto sm:right-0 sm:mt-2.5"
-          } sm:w-80 rounded-2xl border p-3.5 z-50 animate-in fade-in zoom-in-95 duration-150 shadow-2xl ${
+              ? "bottom-full mb-2.5 right-0 w-[min(20rem,calc(100vw-1.5rem))]"
+              : "top-full mt-2.5 right-0 w-[min(20rem,calc(100vw-1.5rem))]"
+          } rounded-2xl border p-3.5 z-[9999] animate-in fade-in zoom-in-95 duration-150 shadow-2xl ${
             isLight
-              ? "border-slate-200 bg-white text-slate-900 shadow-[0_20px_50px_rgba(15,23,42,0.12)]"
+              ? "border-slate-200 bg-white text-slate-900 shadow-[0_20px_50px_rgba(15,23,42,0.14)]"
               : "border-white/10 bg-[#111114] text-white shadow-[0_20px_50px_rgba(0,0,0,0.85)]"
           }`}
         >

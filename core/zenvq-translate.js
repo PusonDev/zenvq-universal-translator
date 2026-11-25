@@ -400,31 +400,210 @@
         z-index: 999999 !important;
         direction: ltr !important;
       }
-      /* Automatic Dark & Light Mode Support for Floating Widget */
-      html.light #zenvq-auto-widget-pill button,
-      body.light #zenvq-auto-widget-pill button,
-      [data-theme="light"] #zenvq-auto-widget-pill button {
+      /* Automatic Dark & Light Mode Support for Floating Unified Capsule */
+      #zenvq-auto-widget-pill .zvq-capsule {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px;
+        border-radius: 9999px;
+        background: rgba(20, 20, 24, 0.92);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        color: #ffffff;
+        transition: all 0.2s ease;
+      }
+      #zenvq-auto-widget-pill .zvq-lang-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 8px 5px 10px;
+        border-radius: 9999px;
+        border: none;
+        background: transparent;
+        color: #f4f4f5;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+      #zenvq-auto-widget-pill .zvq-lang-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+      }
+      #zenvq-auto-widget-pill .zvq-divider {
+        width: 1px;
+        height: 14px;
+        background: rgba(255, 255, 255, 0.14);
+        margin: 0 2px;
+      }
+      #zenvq-auto-widget-pill .zvq-theme-btn {
+        width: 28px;
+        height: 28px;
+        border-radius: 9999px;
+        border: none;
+        background: transparent;
+        color: #d4d4d8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      #zenvq-auto-widget-pill .zvq-theme-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+      }
+      #zenvq-auto-widget-pill .zvq-menu {
+        display: none;
+        position: absolute;
+        bottom: 48px;
+        right: 0;
+        width: 280px;
+        max-width: calc(100vw - 24px);
+        background: #111114;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 16px;
+        padding: 12px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+        color: #ffffff;
+      }
+      #zenvq-auto-widget-pill .zvq-theme-strip {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 11px;
+        color: #a1a1aa;
+      }
+      #zenvq-auto-widget-pill .zvq-theme-seg {
+        display: inline-flex;
+        padding: 2px;
+        border-radius: 8px;
+        background: #18181c;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      #zenvq-auto-widget-pill .zvq-theme-opt {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: none;
+        background: transparent;
+        color: #a1a1aa;
+        font-size: 11px;
+        cursor: pointer;
+      }
+      #zenvq-auto-widget-pill .zvq-theme-opt.active {
+        background: #27272a;
+        color: #ffffff;
+        font-weight: 600;
+      }
+      #zenvq-auto-widget-pill .zvq-list {
+        max-height: 250px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      #zenvq-auto-widget-pill .zvq-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 7px 10px;
+        border: 1px solid transparent;
+        background: transparent;
+        color: #e4e4e7;
+        font-size: 12px;
+        text-align: left;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      #zenvq-auto-widget-pill .zvq-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: #ffffff;
+      }
+      #zenvq-auto-widget-pill .zvq-item.active {
+        background: rgba(255, 255, 255, 0.09);
+        border-color: rgba(255, 255, 255, 0.15);
+        color: #ffffff;
+        font-weight: 600;
+      }
+      /* Light Mode Overrides */
+      html.light #zenvq-auto-widget-pill .zvq-capsule,
+      body.light #zenvq-auto-widget-pill .zvq-capsule,
+      html[data-theme="light"] #zenvq-auto-widget-pill .zvq-capsule,
+      html[data-theme="purple"] #zenvq-auto-widget-pill .zvq-capsule {
+        background: rgba(255, 255, 255, 0.96) !important;
+        border-color: rgba(15, 23, 42, 0.14) !important;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12) !important;
+        color: #0f172a !important;
+      }
+      html.light #zenvq-auto-widget-pill .zvq-lang-btn,
+      body.light #zenvq-auto-widget-pill .zvq-lang-btn,
+      html[data-theme="light"] #zenvq-auto-widget-pill .zvq-lang-btn,
+      html[data-theme="purple"] #zenvq-auto-widget-pill .zvq-lang-btn {
+        color: #0f172a !important;
+      }
+      html.light #zenvq-auto-widget-pill .zvq-lang-btn:hover,
+      html[data-theme="light"] #zenvq-auto-widget-pill .zvq-lang-btn:hover {
+        background: rgba(15, 23, 42, 0.05) !important;
+      }
+      html.light #zenvq-auto-widget-pill .zvq-divider,
+      html[data-theme="light"] #zenvq-auto-widget-pill .zvq-divider,
+      html[data-theme="purple"] #zenvq-auto-widget-pill .zvq-divider {
+        background: rgba(15, 23, 42, 0.12) !important;
+      }
+      html.light #zenvq-auto-widget-pill .zvq-theme-btn,
+      html[data-theme="light"] #zenvq-auto-widget-pill .zvq-theme-btn,
+      html[data-theme="purple"] #zenvq-auto-widget-pill .zvq-theme-btn {
+        color: #475569 !important;
+      }
+      html.light #zenvq-auto-widget-pill .zvq-menu,
+      html[data-theme="light"] #zenvq-auto-widget-pill .zvq-menu,
+      html[data-theme="purple"] #zenvq-auto-widget-pill .zvq-menu {
+        background: #ffffff !important;
+        border-color: rgba(15, 23, 42, 0.14) !important;
+        box-shadow: 0 20px 50px rgba(15, 23, 42, 0.16) !important;
+        color: #0f172a !important;
+      }
+      html.light #zenvq-auto-widget-pill .zvq-theme-strip,
+      html[data-theme="light"] #zenvq-auto-widget-pill .zvq-theme-strip {
+        border-bottom-color: rgba(15, 23, 42, 0.08) !important;
+        color: #64748b !important;
+      }
+      html.light #zenvq-auto-widget-pill .zvq-theme-seg,
+      html[data-theme="light"] #zenvq-auto-widget-pill .zvq-theme-seg {
+        background: #f1f5f9 !important;
+        border-color: rgba(15, 23, 42, 0.1) !important;
+      }
+      html.light #zenvq-auto-widget-pill .zvq-theme-opt,
+      html[data-theme="light"] #zenvq-auto-widget-pill .zvq-theme-opt {
+        color: #64748b !important;
+      }
+      html.light #zenvq-auto-widget-pill .zvq-theme-opt.active,
+      html[data-theme="light"] #zenvq-auto-widget-pill .zvq-theme-opt.active {
         background: #ffffff !important;
         color: #0f172a !important;
-        border: 1px solid rgba(15, 23, 42, 0.15) !important;
-        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1) !important;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
       }
-      html.light #zenvq-auto-widget-pill > div,
-      body.light #zenvq-auto-widget-pill > div,
-      [data-theme="light"] #zenvq-auto-widget-pill > div {
-        background: #ffffff !important;
-        border: 1px solid rgba(15, 23, 42, 0.15) !important;
-        box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12) !important;
+      html.light #zenvq-auto-widget-pill .zvq-item,
+      html[data-theme="light"] #zenvq-auto-widget-pill .zvq-item {
+        color: #334155 !important;
       }
-      html.light #zenvq-auto-widget-pill > div button,
-      body.light #zenvq-auto-widget-pill > div button,
-      [data-theme="light"] #zenvq-auto-widget-pill > div button {
-        color: #1e293b !important;
+      html.light #zenvq-auto-widget-pill .zvq-item:hover,
+      html[data-theme="light"] #zenvq-auto-widget-pill .zvq-item:hover {
+        background: #f8fafc !important;
+        color: #0f172a !important;
       }
-      html.light #zenvq-auto-widget-pill > div button:hover,
-      body.light #zenvq-auto-widget-pill > div button:hover,
-      [data-theme="light"] #zenvq-auto-widget-pill > div button:hover {
-        background: rgba(15, 23, 42, 0.06) !important;
+      html.light #zenvq-auto-widget-pill .zvq-item.active,
+      html[data-theme="light"] #zenvq-auto-widget-pill .zvq-item.active {
+        background: #f1f5f9 !important;
+        border-color: #cbd5e1 !important;
+        color: #0f172a !important;
       }
       header[data-zenvq-nav-anchor],
       nav[data-zenvq-nav-anchor] {
@@ -434,9 +613,47 @@
     (document.head || document.documentElement).appendChild(style);
   }
 
-  // Self-contained Floating Pill for non-React websites with data-auto-widget="true"
+  function detectActiveThemeMode() {
+    try {
+      const root = document.documentElement;
+      if (root.classList.contains("light")) return "light";
+      if (root.classList.contains("dark")) return "dark";
+      const attr = root.getAttribute("data-theme") || root.getAttribute("data-mode");
+      if (attr === "light" || attr === "purple") return "light";
+      if (attr === "dark") return "dark";
+      const stored = localStorage.getItem("zenvq_theme") || localStorage.getItem("zenvq-theme") || localStorage.getItem("theme");
+      if (stored === "light" || stored === "purple") return "light";
+      if (stored === "dark") return "dark";
+    } catch {}
+    return "dark";
+  }
+
+  function applyGlobalThemeMode(targetMode) {
+    try {
+      const root = document.documentElement;
+      const body = document.body;
+      root.classList.remove("dark", "light", "dark-theme", "light-theme");
+      root.classList.add(targetMode);
+      root.setAttribute("data-theme", targetMode);
+      root.setAttribute("data-mode", targetMode);
+      if (body) {
+        body.classList.remove("dark", "light", "dark-theme", "light-theme");
+        body.classList.add(targetMode);
+      }
+      localStorage.setItem("theme", targetMode);
+      localStorage.setItem("zenvq_theme", targetMode);
+      localStorage.setItem("zenvq-theme", targetMode);
+      localStorage.setItem("saif-portfolio-theme", targetMode);
+      localStorage.setItem("zenvq_tools_theme", targetMode);
+      localStorage.setItem("ni-theme", targetMode);
+      localStorage.setItem("theme-preference", targetMode);
+      window.dispatchEvent(new CustomEvent("zenvq-theme-changed", { detail: { theme: targetMode } }));
+    } catch {}
+  }
+
+  // Self-contained Unified Language & Theme Pill for non-React websites with data-auto-widget="true"
   function injectAutoWidgetIfNeeded() {
-    const currentScript = document.currentScript || document.querySelector('script[src*="zenvq-translate"]');
+    const currentScript = document.currentScript || document.querySelector('script[src*="zenvq-translate"], script[src*="loader.js"], script[data-auto-widget="true"]');
     if (!currentScript || currentScript.getAttribute("data-auto-widget") !== "true") return;
 
     if (document.getElementById("zenvq-auto-widget-pill")) return;
@@ -451,32 +668,101 @@
     widget.className = "notranslate";
     widget.setAttribute("translate", "no");
     widget.setAttribute("dir", "ltr");
-    widget.style.cssText = "position:fixed !important;bottom:24px !important;right:24px !important;left:auto !important;z-index:999999 !important;direction:ltr !important;font-family:system-ui,-apple-system,sans-serif;";
 
-    const btn = document.createElement("button");
-    btn.style.cssText = "display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:9999px;background:#09090b;color:#ffffff;border:1px solid rgba(255,255,255,0.2);box-shadow:0 10px 30px rgba(0,0,0,0.5);cursor:pointer;font-size:12px;font-weight:600;";
-    btn.innerHTML = '🌐 <span id="zvq-widget-label">English</span>';
+    const capsule = document.createElement("div");
+    capsule.className = "zvq-capsule";
+
+    const activeMeta = LANGUAGES.find(function (l) { return l.code === currentLang; }) || LANGUAGES[0];
+    const langBtn = document.createElement("button");
+    langBtn.type = "button";
+    langBtn.className = "zvq-lang-btn";
+    langBtn.innerHTML = '<svg style="width:14px;height:14px;color:#00E599;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg><span id="zvq-widget-label">' + activeMeta.native + '</span> <span style="opacity:0.6;font-size:10px;font-family:monospace;">(' + activeMeta.badge + ')</span>';
+
+    const divider = document.createElement("div");
+    divider.className = "zvq-divider";
+
+    const themeBtn = document.createElement("button");
+    themeBtn.type = "button";
+    themeBtn.className = "zvq-theme-btn";
+    themeBtn.setAttribute("aria-label", "Toggle Dark and Light theme");
+
+    const moonSvg = '<svg style="width:14px;height:14px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>';
+    const sunSvg = '<svg style="width:14px;height:14px;color:#f59e0b;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/></svg>';
 
     const menu = document.createElement("div");
-    menu.style.cssText = "display:none;position:absolute;bottom:48px;right:0;width:240px;max-height:300px;overflow-y:auto;background:#09090b;border:1px solid rgba(255,255,255,0.15);border-radius:16px;padding:6px;box-shadow:0 20px 40px rgba(0,0,0,0.8);";
+    menu.className = "zvq-menu";
+
+    // Display Theme Strip
+    const strip = document.createElement("div");
+    strip.className = "zvq-theme-strip";
+    strip.innerHTML = '<span style="font-family:monospace;text-transform:uppercase;letter-spacing:0.06em;">Display Theme</span>';
+    const seg = document.createElement("div");
+    seg.className = "zvq-theme-seg";
+    const darkOpt = document.createElement("button");
+    darkOpt.type = "button";
+    darkOpt.className = "zvq-theme-opt";
+    darkOpt.innerHTML = moonSvg + '<span>Dark</span>';
+    const lightOpt = document.createElement("button");
+    lightOpt.type = "button";
+    lightOpt.className = "zvq-theme-opt";
+    lightOpt.innerHTML = sunSvg + '<span>Light</span>';
+    seg.appendChild(darkOpt);
+    seg.appendChild(lightOpt);
+    strip.appendChild(seg);
+    menu.appendChild(strip);
+
+    function syncWidgetThemeUI() {
+      const m = detectActiveThemeMode();
+      themeBtn.innerHTML = m === "light" ? sunSvg : moonSvg;
+      darkOpt.className = "zvq-theme-opt" + (m === "dark" ? " active" : "");
+      lightOpt.className = "zvq-theme-opt" + (m === "light" ? " active" : "");
+    }
+    syncWidgetThemeUI();
+
+    themeBtn.onclick = function (e) {
+      e.stopPropagation();
+      const next = detectActiveThemeMode() === "dark" ? "light" : "dark";
+      applyGlobalThemeMode(next);
+      syncWidgetThemeUI();
+    };
+    darkOpt.onclick = function (e) {
+      e.stopPropagation();
+      applyGlobalThemeMode("dark");
+      syncWidgetThemeUI();
+    };
+    lightOpt.onclick = function (e) {
+      e.stopPropagation();
+      applyGlobalThemeMode("light");
+      syncWidgetThemeUI();
+    };
+    window.addEventListener("zenvq-theme-changed", syncWidgetThemeUI);
+
+    // Language List
+    const listWrap = document.createElement("div");
+    listWrap.className = "zvq-list";
+    const itemButtons = {};
 
     LANGUAGES.forEach(function (l) {
       const item = document.createElement("button");
-      item.style.cssText = "display:flex;align-items:center;justify-content:space-between;width:100%;padding:8px 12px;border:none;background:transparent;color:#f4f4f5;font-size:12px;text-align:left;border-radius:8px;cursor:pointer;";
-      item.innerHTML = '<span>' + l.native + ' <small style="opacity:0.6;font-size:10px;">(' + l.name + ')</small></span><span style="opacity:0.5;font-size:10px;">' + l.badge + '</span>';
-      item.onmouseover = function () { item.style.background = "rgba(255,255,255,0.1)"; };
-      item.onmouseout = function () { item.style.background = "transparent"; };
+      item.type = "button";
+      item.className = "zvq-item" + (l.code === currentLang ? " active" : "");
+      item.innerHTML = '<span><strong style="font-family:monospace;font-size:10px;margin-right:6px;color:#00E599;">' + l.badge + '</strong>' + l.native + ' <small style="opacity:0.6;font-size:10px;">(' + l.name + ')</small></span>' + (l.code === currentLang ? '<span style="color:#00E599;font-size:11px;">✓</span>' : '');
       item.onclick = function () {
         applyLanguage(l.code, document.body, true);
-        const widgetLabel = document.getElementById("zvq-widget-label");
-        if (widgetLabel) widgetLabel.textContent = l.native;
+        langBtn.innerHTML = '<svg style="width:14px;height:14px;color:#00E599;flex-shrink:0;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg><span id="zvq-widget-label">' + l.native + '</span> <span style="opacity:0.6;font-size:10px;font-family:monospace;">(' + l.badge + ')</span>';
+        Object.keys(itemButtons).forEach(function (k) {
+          itemButtons[k].className = "zvq-item" + (k === l.code ? " active" : "");
+        });
         menu.style.display = "none";
       };
-      menu.appendChild(item);
+      itemButtons[l.code] = item;
+      listWrap.appendChild(item);
     });
+    menu.appendChild(listWrap);
 
-    btn.onclick = function (e) {
+    langBtn.onclick = function (e) {
       e.stopPropagation();
+      syncWidgetThemeUI();
       menu.style.display = menu.style.display === "none" ? "block" : "none";
     };
 
@@ -484,7 +770,10 @@
       menu.style.display = "none";
     });
 
-    widget.appendChild(btn);
+    capsule.appendChild(langBtn);
+    capsule.appendChild(divider);
+    capsule.appendChild(themeBtn);
+    widget.appendChild(capsule);
     widget.appendChild(menu);
     document.body.appendChild(widget);
   }

@@ -22,29 +22,23 @@ $Installer = Join-Path $PSScriptRoot "install-translator.ps1"
 $Verifier = Join-Path $PSScriptRoot "verify-translator.ps1"
 
 $Sites = @(
-    "ZenVQ-EcoSystem",
-    "ZenVQ-Agency",
-    "ZenVQ-Tools",
-    "templetes.zenvq.com",
-    "Puson-Dev",
-    "ZenVQ-Suggests",
-    "Rafij-portfolio",
-    "Natures-Intimacy"
+    @{ Name = "ZenVQ-EcoSystem"; Rel = "ZenVQ-EcoSystem" },
+    @{ Name = "ZenVQ-Agency"; Rel = "ZenVQ-Agency" },
+    @{ Name = "ZenVQ-Tools (OneApp Web)"; Rel = "ZenVQ-Tools\01-OneApp-Ecosystem\01-Apps\oneapp-website" },
+    @{ Name = "ZenVQ-Tools (CV Maker)"; Rel = "ZenVQ-Tools\02-CV-and-Biodata-Maker" },
+    @{ Name = "Templates Hub"; Rel = "ZenVQ-Tools\03-Templates-Hub" },
+    @{ Name = "Rafij-portfolio"; Rel = "ZenVQ-Tools\03-Templates-Hub\Rafij-portfolio" },
+    @{ Name = "Saif-portfolio"; Rel = "ZenVQ-Tools\03-Templates-Hub\Saif-portfolio" },
+    @{ Name = "Puson-Dev"; Rel = "Puson-Dev" },
+    @{ Name = "ZenVQ-Suggests"; Rel = "ZenVQ-Suggests\zenvq-suggest" },
+    @{ Name = "Natures-Intimacy"; Rel = "Natures-Intimacy" }
 )
 
 $Report = @()
 
-foreach ($siteName in $Sites) {
-    $sitePath = Join-Path $ProjectsRoot $siteName
-    if (-not (Test-Path $sitePath)) {
-        $templatesPath = Join-Path $ProjectsRoot "ZenVQ-Tools\03-Templates-Hub\$siteName"
-        if (Test-Path $templatesPath) {
-            $sitePath = $templatesPath
-        } elseif ($siteName -eq "templetes.zenvq.com") {
-            $hubPath = Join-Path $ProjectsRoot "ZenVQ-Tools\03-Templates-Hub"
-            if (Test-Path $hubPath) { $sitePath = $hubPath }
-        }
-    }
+foreach ($site in $Sites) {
+    $siteName = $site.Name
+    $sitePath = Join-Path $ProjectsRoot $site.Rel
     Write-Host "---------------------------------------------------------------------" -ForegroundColor DarkGray
     Write-Host "Processing: $siteName" -ForegroundColor Yellow
 
